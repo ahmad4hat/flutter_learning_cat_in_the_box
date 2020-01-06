@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/cat.dart';
-import 'dart:math';
+import 'dart:math' show pi;
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -10,19 +10,22 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   //provides the ticker , like one milisocond is 1 tick
-  Animation<double> catAnimation;
-  AnimationController catController;
-  Animation<double> boxAnimation;
-  AnimationController boxController;
+  Animation<double> catAnimation; //contains a double value that changes
+  AnimationController catController; // changes that value
+  Animation<double> boxAnimation; //contains a double value that changes
+  AnimationController boxController; // changes that value
 
+  //settting up intial state
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _setupAnimations();
-    boxController.forward();
+    boxController
+        .forward(); // starts the box animation whiile the cat is in the box
   }
 
+  //setting up the animation
   void _setupAnimations() {
     _setupBoxAnimation();
     _setupCatAnimation();
@@ -32,13 +35,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     boxController = AnimationController(
       vsync: this, // vsync this is provided by the TickerProviderStateMixin
       duration: Duration(
-        milliseconds: 800,// was micrrosecond instead of milisond
+        milliseconds: 800, // was micrrosecond instead of milisond
       ),
     );
 
+    //Tween stands for between it sets up the value for animation ending and stuff
     boxAnimation = Tween(begin: pi * 0.6, end: pi * 0.65).animate(
         CurvedAnimation(curve: Curves.easeInOut, parent: boxController));
 
+    // creates the flappy effect
     boxAnimation.addListener(() {
       if (boxAnimation.status == AnimationStatus.completed) {
         boxController.reverse();
@@ -52,7 +57,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     catController = AnimationController(
       vsync: this, // vsync this is provided by the TickerProviderStateMixin
       duration: Duration(
-        milliseconds: 200,// was micro second instead of milisecond
+        milliseconds: 200, // was micro second instead of milisecond
       ),
     );
     catAnimation = Tween(
