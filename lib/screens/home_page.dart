@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/cat.dart';
-import 'dart:math' show pi;
+import 'dart:math';
 
 class HomePage extends StatefulWidget {
   @override
@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _boxAnimationSetup();
   }
 
-  _boxAnimationSetup() {
+  void _boxAnimationSetup() {
     boxController = AnimationController(
       vsync: this, // vsync this is provided by the TickerProviderStateMixin
       duration: Duration(
@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
   }
 
-  _setUpCatAnimation() {
+  void _setUpCatAnimation() {
     catController = AnimationController(
       vsync: this, // vsync this is provided by the TickerProviderStateMixin
       duration: Duration(
@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
     catAnimation = Tween(
       begin: -35.0,
-      end: -80,
+      end: -80.0, // this was int instead of double , that caused the bug
     ).animate(CurvedAnimation(parent: catController, curve: Curves.easeIn));
   }
 
