@@ -17,6 +17,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _setupAnimation();
+  }
+
+  void _setupAnimation() {
+    _setUpCatAnimation();
+  }
+
+  _setUpCatAnimation() {
+    catController = AnimationController(
+      vsync: this, // vsync this is provided by the TickerProviderStateMixin
+      duration: Duration(
+        microseconds: 200,
+      ),
+    );
+    catAnimation = Tween(
+      begin: -40.0,
+      end: -80,
+    ).animate(CurvedAnimation(parent: catController, curve: Curves.easeIn));
   }
 
   @override
