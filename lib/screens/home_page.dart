@@ -19,6 +19,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     // TODO: implement initState
     super.initState();
     _setupAnimation();
+    boxController.forward();
   }
 
   void _setupAnimation() {
@@ -34,15 +35,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       ),
     );
 
-    boxAnimation = Tween(begin: pi * 0.6, end: pi * 1.2).animate(
+    boxAnimation = Tween(begin: pi * 0.6, end: pi * 0.65).animate(
       CurvedAnimation(curve: Curves.easeInOut, parent: boxController),
     );
 
     boxAnimation.addListener(() {
       if (boxAnimation.status == AnimationStatus.completed) {
-        boxController.forward();
-      } else if (boxAnimation.status == AnimationStatus.dismissed) {
         boxController.reverse();
+      } else if (boxAnimation.status == AnimationStatus.dismissed) {
+        boxController.forward();
       }
     });
   }
@@ -55,21 +56,41 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       ),
     );
     catAnimation = Tween(
-      begin: -40.0,
+      begin: -35.0,
       end: -80,
     ).animate(CurvedAnimation(parent: catController, curve: Curves.easeIn));
+  }
+
+  void _startAnimation() {
+    if (catController.isCompleted) {
+      boxController.forward();
+      catController.reverse();
+    } else if (catController.isDismissed) {
+      boxController.stop();
+      catController.forward();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.lightGreen,
-      ),
-      body: Stack(
-        children: <Widget>[Cat(), _buildBox()],
-      ),
-    );
+        appBar: AppBar(
+          backgroundColor: Colors.lightGreen,
+        ),
+        body: GestureDetector(
+          onTap: _startAnimation,
+          child: Center(
+            child: Stack(
+              overflow: Overflow.visible,
+              children: <Widget>[
+                _buildCatAnimation(),
+                _buildBox(),
+                _buildLeftFlap(),
+                _buildRightFlap()
+              ],
+            ),
+          ),
+        ));
   }
 
   Widget _buildBox() {
@@ -79,4 +100,49 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       color: Colors.brown,
     );
   }
+
+  Widget _buildCatAnimation() => AnimatedBuilder(
+        animation: catAnimation,
+        builder: (context, child) => Positioned(
+            child: child, top: catAnimation.value, right: 0, left: 0),
+        child: Cat(),
+      );
+
+  Widget _buildLeftFlap() => Positioned(
+        left: 3.0,
+        child: AnimatedBuilder(
+          animation: boxAnimation,
+          builder: (context, child) {
+            return Transform.rotate(
+              angle: boxAnimation.value,
+              alignment: Alignment.topLeft,
+              child: child,
+            );
+          },
+          child: Container(
+            height: 10.0,
+            width: 125.0,
+            color: Colors.brown,
+          ),
+        ),
+      );
+
+  Widget _buildRightFlap() => Positioned(
+        right: 3.0,
+        child: AnimatedBuilder(
+          animation: boxAnimation,
+          builder: (context, child) {
+            return Transform.rotate(
+              angle: boxAnimation.value,
+              alignment: Alignment.topRight,
+              child: child,
+            );
+          },
+          child: Container(
+            height: 10.0,
+            width: 125.0,
+            color: Colors.brown,
+          ),
+        ),
+      );
 }
