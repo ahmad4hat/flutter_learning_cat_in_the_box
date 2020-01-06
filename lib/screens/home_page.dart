@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/cat.dart';
+import 'dart:math' show pi;
 
 class HomePage extends StatefulWidget {
   @override
@@ -22,6 +23,28 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   void _setupAnimation() {
     _setUpCatAnimation();
+    _boxAnimationSetup();
+  }
+
+  _boxAnimationSetup() {
+    boxController = AnimationController(
+      vsync: this, // vsync this is provided by the TickerProviderStateMixin
+      duration: Duration(
+        microseconds: 800,
+      ),
+    );
+
+    boxAnimation = Tween(begin: pi * 0.6, end: pi * 1.2).animate(
+      CurvedAnimation(curve: Curves.easeInOut, parent: boxController),
+    );
+
+    boxAnimation.addListener(() {
+      if (boxAnimation.status == AnimationStatus.completed) {
+        boxController.forward();
+      } else if (boxAnimation.status == AnimationStatus.dismissed) {
+        boxController.reverse();
+      }
+    });
   }
 
   _setUpCatAnimation() {
