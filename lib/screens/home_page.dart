@@ -3,6 +3,7 @@ import '../widgets/cat.dart';
 import 'dart:math';
 
 class HomePage extends StatefulWidget {
+  HomePage({Key key}) : super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -18,26 +19,25 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _setupAnimation();
+    _setupAnimations();
     boxController.forward();
   }
 
-  void _setupAnimation() {
-    _setUpCatAnimation();
-    _boxAnimationSetup();
+  void _setupAnimations() {
+    _setupBoxAnimation();
+    _setupCatAnimation();
   }
 
-  void _boxAnimationSetup() {
+  void _setupBoxAnimation() {
     boxController = AnimationController(
       vsync: this, // vsync this is provided by the TickerProviderStateMixin
       duration: Duration(
-        microseconds: 800,
+        milliseconds: 800,// was micrrosecond instead of milisond
       ),
     );
 
     boxAnimation = Tween(begin: pi * 0.6, end: pi * 0.65).animate(
-      CurvedAnimation(curve: Curves.easeInOut, parent: boxController),
-    );
+        CurvedAnimation(curve: Curves.easeInOut, parent: boxController));
 
     boxAnimation.addListener(() {
       if (boxAnimation.status == AnimationStatus.completed) {
@@ -48,11 +48,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     });
   }
 
-  void _setUpCatAnimation() {
+  void _setupCatAnimation() {
     catController = AnimationController(
       vsync: this, // vsync this is provided by the TickerProviderStateMixin
       duration: Duration(
-        microseconds: 200,
+        milliseconds: 200,// was micro second instead of milisecond
       ),
     );
     catAnimation = Tween(
@@ -75,6 +75,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          title: Text("Cat animation"),
           backgroundColor: Colors.lightGreen,
         ),
         body: GestureDetector(
@@ -133,7 +134,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           animation: boxAnimation,
           builder: (context, child) {
             return Transform.rotate(
-              angle: boxAnimation.value,
+              angle: -boxAnimation
+                  .value, // have to put negatice for the right flap
               alignment: Alignment.topRight,
               child: child,
             );
