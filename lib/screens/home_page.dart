@@ -6,14 +6,36 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  //provides the ticker , like one milisocond is 1 tick
+  Animation<double> catAnimation;
+  AnimationController catController;
+  Animation<double> boxAnimation;
+  AnimationController boxController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.lightGreen,
       ),
-      body: Cat(),
+      body: Stack(
+        children: <Widget>[Cat(), _buildBox()],
+      ),
+    );
+  }
+
+  Widget _buildBox() {
+    return Container(
+      height: 200.0,
+      width: 200.0,
+      color: Colors.brown,
     );
   }
 }
